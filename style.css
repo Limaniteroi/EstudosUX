@@ -152,3 +152,10 @@
     align-items: center;
     text-align: flex-end;
 }
+
+.card-fish{
+    width: 250px;            
+    height: auto;
+    margin: 8px 0;         
+    align-self: center;     
+}
