@@ -1,0 +1,26 @@
+:root{
+    --button-save-color: #5983f8;
+}
+
+.container-add-workspace{
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    height: 157px;
+    width: 521px;
+    background-color: white;
+}
+
+.button-save-workspace{
+    background-color: var(--button-save-color);
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 5px;
+}

@@ -10,6 +10,7 @@
     --done-card-color: #EE289F;
     --font-family: 'Lexend Deca';
     --add-button-color: #862BB4;
+    --add-button-hover-color: #47195f;
 }
 
 .container{
@@ -140,17 +141,26 @@
     text-align: flex-end;
 }
 
+.add-card-button:hover {
+    background-color: var(--add-button-hover-color);
+}
+
+
 .add-workspace-button{
     background-color: var(--add-button-color);
     border-radius: 5px;
     padding: 5px;
     margin: 20px;
-    width: 117px;
+    width: 130px;
     height: 30px;
     display: flex;
     justify-content: center;
     align-items: center;
     text-align: flex-end;
+}
+
+.add-workspace-button:hover{
+    background-color: var(--add-button-hover-color);
 }
 
 .card-fish{
