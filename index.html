@@ -5,116 +5,78 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>To Do List</title>
     <link rel="stylesheet" href="style.css">
-    <link rel="stylesheet" href="adicionar_workspace.css">
-    <link rel="stylesheet" href="adicionar_card.css">
 </head>
 <body>
     <div class="container">
-        <div class="workspace-container" id="workspace-principal">
+        <div class="workspace-container">
             <p class="title">Aquarium's Workspace</p>
-            <img src="aquário.png" alt="aquário">
-            <div class="workspace-cards">
-                <div class="workspace-card-item" data-workspace-id="1">
-                    <p class="text-card">Nova área</p>
+            <img src="aquário.png">
+            <div class = "workspace-cards">
+                <div class="workspace-card-item">
+                    <p class = "text-card">Nova área</p>
                 </div>
-                <div class="add-workspace-button" id="btn-adicionar-workspace">
+                <div class="workspace-card-item">
+                    <p class = "text-card">Nova área</p>
+                </div>
+                <div class="workspace-card-item">
+                    <p class = "text-card">Nova área</p>
+                </div>
+                <div class="add-workspace-button">
                     <h3 class="text-card">+ Add Workspace</h3>
                 </div>
             </div>
         </div>
-
-        <div class="card" data-column-id="to-start" ondragover="dragOver(event)" ondrop="drop(event)">
-            <div class="card-started">
+        <div class="card">
+            <div class ="card-started">
                 <h2 class="title">TO START</h2>
-                <div class="card-item-start" data-card-id="start-1">
-                    <p class="text-card">Task 1<br/>Deadline: XX</p>
+                <div class="card-item-start">
+                    <p class = "text-card">Task 1<br/>Deadline: XX</p>
+                    </div>
+                <div class="card-item-start">
+                    <p class = "text-card">Task 2<br/>Deadline: XX</p>
                 </div>
-                <div class="add-card-button" data-column="to-start">
+                <div class="card-item-start">
+                    <p class = "text-card">Task 3<br/>Deadline: XX</p>
+                </div>
+                <div class="add-card-button">
                     <h3 class="text-card">+ Add Card</h3>
                 </div>
             </div>
         </div>
-        
-        <div class="card" data-column-id="in-progress" ondragover="dragOver(event)" ondrop="drop(event)">
-            <div class="card-progress">
+        <div class="card">
+            <div class ="card-progress">
                 <h2 class="title">IN PROGRESS</h2>
-                <div class="add-card-button" data-column="in-progress">
+                <div class="card-item-progress">
+                    <p class = "text-card">Task 1<br/>Deadline: XX</p>
+                </div>
+                <div class="card-item-progress">
+                    <p class = "text-card">Task 2<br/>Deadline: XX</p>
+                    </div>
+                <div class="card-item-progress">
+                    <p class = "text-card">Task 3<br/>Deadline: XX</p>
+                    </div>
+                <div class="add-card-button">
                     <h3 class="text-card">+ Add Card</h3>
                 </div>
             </div>
         </div>
-
-        <div class="card" data-column-id="done" ondragover="dragOver(event)" ondrop="drop(event)">
-            <div class="card-done">
+        <div class="card">
+            <div class ="card-done">
                 <h2 class="title">DONE</h2>
-                <div class="add-card-button" data-column="done">
+                <div class="card-item-done">
+                    <p class = "text-card">Task 1<br/>Deadline: XX</p>
+                </div>
+                <div class="card-item-done">
+                    <p class = "text-card">Task 2<br/>Deadline: XX</p>
+                </div>
+                <div class="card-item-done">
+                    <p class = "text-card">Task 3<br/>Deadline: XX</p>
+                </div>
+                <div class="add-card-button">
                     <h3 class="text-card">+ Add Card</h3>
                 </div>
             </div>
         </div>
     </div>
-
-    <div id="modal-workspace" class="modal">
-        <div class="container-add-workspace">
-            <span class="fechar-card" role="button" aria-label="Fechar">&times;</span>
-            <h2 class="title-work">Adicionar Novo Workspace</h2>
-            <form id="form-workspace">
-                <div class="text-workspace-item">
-                    <label class="text-workspace" for="titulo-workspace">Title:</label>
-                    <input type="text" id="titulo-workspace" required style="width: 100%; border: 1px solid #ccc; padding: 5px; box-sizing: border-box;">
-                </div>
-                <div class="text-workspace-item">
-                    <label class="text-workspace" for="descricao-workspace">Description (Opcional):</label>
-                    <textarea id="descricao-workspace" style="width: 100%; border: 1px solid #ccc; padding: 5px; box-sizing: border-box;"></textarea>
-                </div>
-                <button type="submit" class="button-save-card">
-                    <h3 class="text-button">Save</h3>
-                </button>
-            </form>
-        </div>
-    </div>
-    
-    <div id="modal-card" class="modal">
-        <div class="container-add-card">
-            <span class="fechar-card" role="button" aria-label="Fechar">&times;</span>
-            <h2 class="title-work">Adicionar Novo Card</h2>
-            <form id="form-card">
-                <input type="hidden" id="card-id">
-                <input type="hidden" id="card-column">
-                <div class="text-card-item">
-                    <label class="text-card" for="card-title">Title:</label>
-                    <input type="text" id="card-title" required style="width: 100%; border: 1px solid #ccc; padding: 5px; box-sizing: border-box;">
-                </div>
-                <div class="text-card-item">
-                    <label class="text-card" for="card-description">Description:</label>
-                    <textarea id="card-description" style="width: 100%; border: 1px solid #ccc; padding: 5px; box-sizing: border-box;"></textarea>
-                </div>
-                <div class="text-card-item">
-                    <label class="text-card" for="card-deadline">Deadline:</label>
-                    <input type="date" id="card-deadline" style="width: 100%; border: 1px solid #ccc; padding: 5px; box-sizing: border-box;">
-                </div>
-                <div class="text-card-item">
-                    <label class="text-card" for="card-contributors">Contributors:</label>
-                    <input type="text" id="card-contributors" style="width: 100%; border: 1px solid #ccc; padding: 5px; box-sizing: border-box;">
-                </div>
-                <div class="text-card-item">
-                    <label class="text-card" for="card-type">Type:</label>
-                    <select id="card-type" style="width: 100%; border: 1px solid #ccc; padding: 5px; box-sizing: border-box;">
-                        <option value="feature">Urgent</option>
-                        <option value="bug">Medium</option>
-                        <option value="research">Low</option>
-                    </select>
-                </div>
-                <button type="submit" class="button-save-card">
-                    <h3 class="text-button">Save</h3>
-                </button>
-                <button type="button" id="btn-delete-card" class="button-save-card" style="background-color: red;">
-                    <h3 class="text-button">Delete</h3>
-                </button>
-            </form>
-        </div>
-    </div>
-
-    <script src="script.js"></script>
 </body>
-</html>
+</html

@@ -1,113 +1,26 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&display=swap');
-
 :root{
     --button-save-color: #5983f8;
-    --text-color-card: #909090;
-    --background-card-color: white;
-    --font-family: 'Inter', sans-serif;
 }
 
-/* ... (Seus estilos existentes) ... */
-
-/* Estilos de Modal */
-.modal {
-    display: none; /* Oculta o modal por padrão */
-    position: fixed; 
-    z-index: 100; 
-    left: 0;
-    top: 0;
-    width: 100%; 
-    height: 100%; 
-    overflow: auto; 
-    background-color: rgba(0,0,0,0.6); 
-    display: flex;
-    justify-content: center;
-    align-items: center;
-}
-
-/* Ajusta o estilo do container do formulário dentro do modal */
-#modal-card .container-add-card {
-    position: relative;
-    height: auto; 
-    padding: 20px;
-    border-radius: 10px;
-    box-shadow: 0 5px 15px rgba(0,0,0,0.3);
-    /* Ajustes para o container */
-    width: 400px; /* Um pouco menor */
-    align-items: flex-start; /* Alinhar itens à esquerda */
-    gap: 10px;
-    
-}
-/* Alinhar o botão Salvar à direita e ajustar o botão Deletar */
-#modal-card .button-save-card {
-    align-self: flex-end;
-}
-
-/* Posicionar o botão de fechar */
-.fechar-card {
-    color: #909090;
-    float: right;
-    font-size: 28px;
-    font-weight: bold;
-    cursor: pointer;
-    position: absolute; 
-    top: 10px;
-    right: 20px;
-}
-
-.fechar-card:hover,
-.fechar-card:focus {
-    color: #000;
-}
-
-/* Ajuste para que os itens de texto do Card se expandam no modal */
-.text-card-item{
-    background-color: var(--background-card-color);
-    border-radius: 5px;
-    padding: 0;
-    margin: 5px 0; /* Menos margem no modal */
-    width: 100%; /* Ocupa a largura total do container */
-    height: auto; /* Altura automática */
+.container-add-workspace{
     display: flex;
     justify-content: flex-start;
-    align-items: flex-start; /* Ajuste para alinhar label/input */
-    flex-direction: column;
-}
-/* Adicionar estilo para os inputs/textareas dentro do modal */
-.container-add-card input[type="text"],
-.container-add-card input[type="date"],
-.container-add-card textarea,
-.container-add-card select {
-    width: 100%;
-    padding: 8px;
-    margin-top: 5px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-    box-sizing: border-box;
+    align-items: center;
+    height: 157px;
+    width: 521px;
+    background-color: white;
 }
 
-/* Ajuste no .text-card para ser a label */
-.text-card{
-    /* Seus estilos existentes */
-    margin-bottom: 5px; /* Espaço entre label e input */
-}
-
-/* Botões Salvar e Deletar um ao lado do outro */
-#form-card {
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: flex-start;
-}
-.button-save-card {
-    margin-right: 0;
-    margin-left: 5px;
-}
-#btn-delete-card {
-    display: none; /* Escondido por padrão, só aparece na edição */
-    background-color: #d9534f; /* Cor vermelha para Deletar */
-}
-#form-card button {
-    /* Agrupa os botões Salvar/Deletar no fim */
-    align-self: flex-end; 
+.button-save-workspace{
+    background-color: var(--button-save-color);
+    border: none;
+    color: white;
+    padding: 10px 20px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+    border-radius: 5px;
 }
