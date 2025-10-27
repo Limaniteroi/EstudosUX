@@ -1,0 +1,163 @@
+.modal-overlay {
+    display: none;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background-color: rgba(0, 0, 0, 0.7);
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.modal-content {
+    background-color: white;
+    border-radius: 12px;
+    padding: 30px;
+    width: 90%;
+    max-width: 500px;
+    position: relative;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+
+.modal-close {
+    position: absolute;
+    top: 15px;
+    right: 20px;
+    background: none;
+    border: none;
+    font-size: 32px;
+    cursor: pointer;
+    color: #666;
+    line-height: 1;
+    padding: 0;
+    width: 30px;
+    height: 30px;
+}
+
+.modal-close:hover {
+    color: #000;
+}
+
+.modal-field {
+    margin-bottom: 20px;
+}
+
+.modal-field label {
+    display: block;
+    font-family: var(--font-family);
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    margin-bottom: 8px;
+}
+
+.modal-input,
+.modal-textarea {
+    width: 100%;
+    padding: 10px;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    font-family: var(--font-family);
+    font-size: 14px;
+    box-sizing: border-box;
+    transition: border-color 0.2s;
+}
+
+.modal-input:focus,
+.modal-textarea:focus {
+    outline: none;
+    border-color: var(--add-button-color);
+}
+
+.modal-textarea {
+    min-height: 80px;
+    resize: vertical;
+}
+
+.modal-type-selector {
+    display: flex;
+    gap: 15px;
+    align-items: center;
+    background-color: #f5f5f5;
+    padding: 10px 20px;
+    border-radius: 25px;
+    width: fit-content;
+}
+
+.type-button {
+    width: 30px;
+    height: 30px;
+    border: none;
+    border-radius: 50%;
+    cursor: pointer;
+    font-size: 20px;
+    transition: transform 0.2s, box-shadow 0.2s;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.type-button[data-type="low"] {
+    background-color: green;
+}
+
+.type-button[data-type="medium"] {
+    background-color: yellow;
+}
+
+.type-button[data-type="high"] {
+    background-color: red;
+}
+
+.type-button:hover {
+    transform: scale(1.1);
+}
+
+.type-button.active {
+    transform: scale(1.2);
+    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.2);
+}
+
+.modal-save {
+    background-color: #4285F4;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    padding: 12px 30px;
+    font-family: var(--font-family);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    float: right;
+    margin-top: 10px;
+}
+
+.modal-save:hover {
+    background-color: #3367D6;
+}
+/* Adicione esta seção ao modal.css */
+/* Melhora a indicação visual do botão de tipo ativo */
+.type-button.active {
+    /* Efeito de escala para destacar */
+    transform: scale(1.15); 
+    /* Sombra para dar profundidade e destaque */
+    box-shadow: 0 0 0 5px rgba(0, 0, 0, 0.1); 
+    /* O texto (o ponto ●) fica visível */
+    color: white !important; 
+}
+
+/* Garante que o texto '●' esteja visível no botão ativo */
+.type-button[data-type="low"].active {
+    color: white;
+}
+
+.type-button[data-type="medium"].active {
+    color: white;
+}
+
+.type-button[data-type="high"].active {
+    color: white;
+}

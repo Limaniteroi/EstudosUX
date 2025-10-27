@@ -1,0 +1,220 @@
+@import url('https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@400;700&display=swap');
+
+:root{
+    --background-color: #1845C2;
+    --workspace-color: #2A3A65;
+    --workspace-item-color: #BB44F7;
+    --cards-color: #13338a;
+    --to-start-card-color: #5983f8;
+    --in-progress-card-color: #4BC563;
+    --done-card-color: #EE289F;
+    --font-family: 'Lexend Deca';
+    --add-button-color: #862BB4;
+    --add-button-hover-color: #47195f;
+    --text-color-card: #909090;
+}
+
+.container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: flex-start;
+    min-height: 600px;
+    height: auto;
+    width: 100%;
+    min-width: 1000px;
+    background-color: var(--background-color);
+    gap: 20px;
+    padding: 20px;
+    overflow-x: auto;
+    box-sizing: border-box;
+}
+
+.card {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 536px;
+    height: auto;
+    width: 280px;
+    background-color: var(--cards-color);
+    border-radius: 10px;
+    margin: 10px;
+    flex-shrink: 0;
+    flex-grow: 0;
+}
+
+.card > div {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: flex-start;
+    width: 100%;
+    height: 100%;
+    padding: 12px;
+    box-sizing: border-box;
+}
+
+/* Contêineres de coluna (card-start, card-progress, card-done) */
+.card-start,
+.card-progress,
+.card-done {
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    width: 100%;
+}
+
+.card-list-content {
+    flex-grow: 1;
+    max-height: 450px;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding: 8px;
+    width: 100%;
+    box-sizing: border-box;
+}
+
+.card-item-start {
+    background-color: var(--to-start-card-color);
+    box-shadow: 0 3px 6px rgba(30, 31, 34, 0.4);
+    border-radius: 5px;
+    padding: 10px;
+    margin: 12px 0;
+    width: calc(100% - 8px);
+    min-height: 56px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: grab;
+    word-wrap: break-word;
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
+}
+
+.card-item-start:active {
+    cursor: grabbing;
+}
+
+.card-item-progress {
+    background-color: var(--in-progress-card-color);
+    border-radius: 5px;
+    padding: 10px;
+    margin: 12px 0;
+    width: calc(100% - 8px);
+    min-height: 56px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: grab;
+    word-wrap: break-word;
+    box-shadow: 0 3px 6px rgba(30, 31, 34, 0.4);
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
+}
+
+.card-item-progress:active {
+    cursor: grabbing;
+}
+
+.card-item-done {
+    background-color: var(--done-card-color);
+    border-radius: 5px;
+    padding: 10px;
+    margin: 12px 0;
+    width: calc(100% - 8px);
+    min-height: 56px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: grab;
+    word-wrap: break-word;
+    box-shadow: 0 3px 6px rgba(30, 31, 34, 0.4);
+    transition: transform 0.2s, box-shadow 0.2s;
+    box-sizing: border-box;
+}
+
+.card-item-done:active {
+    cursor: grabbing;
+}
+
+.dragging {
+    opacity: 0.5;
+    transform: rotate(3deg);
+}
+
+.title {
+    font-family: var(--font-family);
+    margin: 0;
+    padding-top: 8px;
+    line-height: 1.2;
+    font-style: normal;
+    font-weight: bold;
+    font-size: 16px;
+    color: #FFFFFF;
+    text-align: center;
+    flex-shrink: 0;
+}
+
+.text-card {
+    font-family: var(--font-family);
+    font-style: normal;
+    font-weight: normal;
+    font-size: 12px;
+    line-height: 15px;
+    color: #FFFFFF;
+    text-align: center;
+}
+
+.add-card-button {
+    background-color: var(--add-button-color);
+    border-radius: 5px;
+    padding: 5px;
+    margin: 5px 0;
+    width: 117px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    transition: background-color 0.2s;
+    margin-top: auto;
+    box-shadow: 0 3px 6px rgba(30, 31, 34, 0.4);
+
+}
+
+.add-card-button:hover {
+    background-color: var(--add-button-hover-color);
+}
+
+.workspace-container img {
+    margin-top: 20px;
+    margin-bottom: 10px;
+}
+
+
+.workspace-cards {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    flex-grow: 1;
+    padding: 5px 0;
+}
+
+.card-list-content::-webkit-scrollbar {
+    width: 6px;
+}
+
+.card-list-content::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+}
+
+.card-list-content::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+}
+
+.card-list-content::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+}

@@ -1,0 +1,101 @@
+:root{
+    --workspace-color: #2A3A65;
+    --workspace-item-color: #BB44F7;
+    --font-family: 'Lexend Deca';
+    --add-button-color: #862BB4;
+    --add-button-hover-color: #47195f;
+    --text-color-card: #909090;
+}
+.workspace-container {
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    flex-direction: column;
+    min-height: 536px;
+    max-height: 536px;
+    height: auto;
+    width: 280px;
+    background-color: var(--workspace-color);
+    border-radius: 10px;
+    margin: 10px;
+    padding: 12px;
+    box-sizing: border-box;
+    flex-shrink: 0;
+    overflow: hidden;
+    position: relative;
+}
+
+.workspace-cards {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    width: 100%;
+    overflow-y: auto;
+    flex-grow: 1;
+    padding: 5px 0;
+    padding-bottom: 60px;
+}
+
+.workspace-card-item {
+    background: linear-gradient(135deg, #9747FF 0%, #7C3AED 100%);
+    border-radius: 5px;
+    padding: 0;
+    margin: 15px 0;
+    width: 186px;
+    height: 38px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    flex-shrink: 0;
+    transition: transform 0.2s, box-shadow 0.2s;
+    cursor: pointer;
+}
+
+.workspace-card-item:hover {
+    transform: translateX(4px);
+    box-shadow: 0 3px 6px rgba(30, 31, 34, 0.4);
+}
+
+
+.add-workspace-button {
+    background-color: var(--add-button-color);
+    border-radius: 5px;
+    padding: 5px;
+    margin: 0;
+    width: 130px;
+    height: 30px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+    box-shadow: 0 3px 6px rgba(30, 31, 34, 0.4);
+    cursor: pointer;
+    transition: background-color 0.2s;
+    flex-shrink: 0;
+    position: absolute;
+    bottom: 25px;
+    left: 50%;
+    transform: translateX(-50%);
+}
+
+.add-workspace-button:hover {
+    background-color: var(--add-button-hover-color);
+}
+
+.workspace-cards::-webkit-scrollbar {
+    width: 6px;
+}
+
+.workspace-cards::-webkit-scrollbar-track {
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: 10px;
+}
+
+.workspace-cards::-webkit-scrollbar-thumb {
+    background: rgba(255, 255, 255, 0.2);
+    border-radius: 10px;
+}
+
+.workspace-cards::-webkit-scrollbar-thumb:hover {
+    background: rgba(255, 255, 255, 0.3);
+}

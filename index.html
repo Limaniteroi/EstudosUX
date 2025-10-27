@@ -4,73 +4,61 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>To Do List</title>
-    <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="home.css">
+    <link rel="stylesheet" href="workspace.css">
+    <script src="script.js" defer></script>
 </head>
 <body>
     <div class="container">
+        
         <div class="workspace-container">
             <p class="title">Aquarium's Workspace</p>
-            <img src="aquário.png">
+            <img src="aquário.png" alt="Aquário">
             <div class = "workspace-cards">
-                <div class="workspace-card-item">
-                    <p class = "text-card">Nova área</p>
-                </div>
-                <div class="workspace-card-item">
-                    <p class = "text-card">Nova área</p>
-                </div>
-                <div class="workspace-card-item">
-                    <p class = "text-card">Nova área</p>
-                </div>
                 <div class="add-workspace-button">
                     <h3 class="text-card">+ Add Workspace</h3>
                 </div>
             </div>
         </div>
+
         <div class="card">
-            <div class ="card-started">
+            <div class ="card-start">
                 <h2 class="title">TO START</h2>
-                <div class="card-item-start">
-                    <p class = "text-card">Task 1<br/>Deadline: XX</p>
+                
+                <div class="card-list-content">
+                    <div class="card-item-start">
+                        <p class = "text-card">Task 1: Definir Cores<br/>Deadline: XX</p>
                     </div>
-                <div class="card-item-start">
-                    <p class = "text-card">Task 2<br/>Deadline: XX</p>
-                </div>
-                <div class="card-item-start">
-                    <p class = "text-card">Task 3<br/>Deadline: XX</p>
                 </div>
                 <div class="add-card-button">
                     <h3 class="text-card">+ Add Card</h3>
                 </div>
             </div>
         </div>
+
         <div class="card">
             <div class ="card-progress">
                 <h2 class="title">IN PROGRESS</h2>
-                <div class="card-item-progress">
-                    <p class = "text-card">Task 1<br/>Deadline: XX</p>
+                
+                <div class="card-list-content">
+                    <div class="card-item-progress">
+                        <p class = "text-card">Task 1: Codar JS<br/>Deadline: XX</p>
+                    </div>
                 </div>
-                <div class="card-item-progress">
-                    <p class = "text-card">Task 2<br/>Deadline: XX</p>
-                    </div>
-                <div class="card-item-progress">
-                    <p class = "text-card">Task 3<br/>Deadline: XX</p>
-                    </div>
                 <div class="add-card-button">
                     <h3 class="text-card">+ Add Card</h3>
                 </div>
             </div>
         </div>
+        
         <div class="card">
             <div class ="card-done">
                 <h2 class="title">DONE</h2>
-                <div class="card-item-done">
-                    <p class = "text-card">Task 1<br/>Deadline: XX</p>
-                </div>
-                <div class="card-item-done">
-                    <p class = "text-card">Task 2<br/>Deadline: XX</p>
-                </div>
-                <div class="card-item-done">
-                    <p class = "text-card">Task 3<br/>Deadline: XX</p>
+                
+                <div class="card-list-content">
+                    <div class="card-item-done">
+                        <p class = "text-card">Task 1: Estrutura HTML<br/>Deadline: XX</p>
+                    </div>
                 </div>
                 <div class="add-card-button">
                     <h3 class="text-card">+ Add Card</h3>
@@ -78,5 +66,6 @@
             </div>
         </div>
     </div>
+    
 </body>
-</html
+</html>
