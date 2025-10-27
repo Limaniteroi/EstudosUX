@@ -17,7 +17,7 @@
     width: 280px;
     background-color: var(--workspace-color);
     border-radius: 10px;
-    margin: 10px;
+    margin: 5px;
     padding: 12px;
     box-sizing: border-box;
     flex-shrink: 0;
@@ -40,7 +40,7 @@
     background: linear-gradient(135deg, #9747FF 0%, #7C3AED 100%);
     border-radius: 5px;
     padding: 0;
-    margin: 15px 0;
+    margin: 5px 0;
     width: 186px;
     height: 38px;
     display: flex;
