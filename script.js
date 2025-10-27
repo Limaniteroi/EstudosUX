@@ -7,139 +7,220 @@
         'card-done': 'card-item-done'
     };
 
-    // Variáveis globais para armazenar o contexto do modal
+    const PRIORITY_LABELS = {
+        'low': 'Baixa',
+        'medium': 'Média',
+        'high': 'Alta'
+    };
+
     let currentColumn = null;
     let currentCardListContainer = null;
-    let modalEventsInitialized = false; // Garante que os eventos do modal sejam configurados apenas uma vez
+    let editingCard = null;
+    let editingWorkspace = null;
+    let cardIdCounter = 0;
+    let workspaceIdCounter = 0;
 
-    // Função createModal removida: O modal já existe no DOM (modal.html).
+    // ========== FUNÇÕES DE CARDS ==========
 
-    function openModal(cardListContainer, columnClass) {
+    function openModal(cardListContainer, columnClass, cardData = null) {
         currentCardListContainer = cardListContainer;
         currentColumn = columnClass;
+        editingCard = cardData;
 
-        let modal = document.querySelector('.modal-overlay');
+        const modal = document.getElementById('modalOverlay');
+        const modalTitle = document.getElementById('modalTitleText');
         
-        if (!modal) {
-             console.error("Modal overlay não encontrado. Verifique se modal.html está incluído.");
-             return;
+        if (cardData) {
+            modalTitle.textContent = 'Editar Tarefa';
+            document.getElementById('modal-title-input').value = cardData.title;
+            document.getElementById('modal-description').value = cardData.description || '';
+            document.getElementById('modal-deadline').value = cardData.deadline || '';
+            document.getElementById('modal-contributors').value = cardData.contributors || '';
+
+            const typeButtons = modal.querySelectorAll('.type-button');
+            typeButtons.forEach(btn => btn.classList.remove('active'));
+            modal.querySelector(`[data-type="${cardData.priority}"]`).classList.add('active');
+        } else {
+            modalTitle.textContent = 'Nova Tarefa';
+            document.getElementById('modal-title-input').value = '';
+            document.getElementById('modal-description').value = '';
+            document.getElementById('modal-deadline').value = '';
+            document.getElementById('modal-contributors').value = '';
+
+            const typeButtons = modal.querySelectorAll('.type-button');
+            typeButtons.forEach(btn => btn.classList.remove('active'));
+            modal.querySelector('[data-type="medium"]').classList.add('active');
         }
 
-        // Resetar campos
-        document.getElementById('modal-title').value = '';
-        document.getElementById('modal-description').value = '';
-        document.getElementById('modal-deadline').value = '';
-        document.getElementById('modal-contributors').value = '';
-
-        // Selecionar o tipo correto baseado na coluna
-        const typeButtons = modal.querySelectorAll('.type-button');
-        typeButtons.forEach(btn => btn.classList.remove('active'));
-        
-        let selectedType = 'start';
-        if (columnClass && columnClass.includes('progress')) selectedType = 'progress';
-        else if (columnClass && columnClass.includes('done')) selectedType = 'done';
-        // Default para 'start'
-        
-        const selectedButton = modal.querySelector(`[data-type="${selectedType}"]`);
-        if (selectedButton) selectedButton.classList.add('active');
-
-        modal.style.display = 'flex';
+        modal.classList.add('active');
     }
 
     function closeModal() {
-        const modal = document.querySelector('.modal-overlay');
-        if (modal) {
-            modal.style.display = 'none';
-        }
+        const modal = document.getElementById('modalOverlay');
+        modal.classList.remove('active');
+        currentColumn = null;
+        currentCardListContainer = null;
+        editingCard = null;
     }
 
-    function setupModalEvents() {
-        const modal = document.querySelector('.modal-overlay');
-        if (!modal) return;
-        
-        // Botão fechar
-        modal.querySelector('.modal-close').addEventListener('click', closeModal);
-
-        // Fechar ao clicar fora
-        modal.addEventListener('click', function(e) {
-            if (e.target === modal) {
-                closeModal();
-            }
-        });
-
-        // Seleção de tipo
-        const typeButtons = modal.querySelectorAll('.type-button');
-        typeButtons.forEach(button => {
-            button.addEventListener('click', function() {
-                typeButtons.forEach(btn => btn.classList.remove('active'));
-                this.classList.add('active');
-            });
-        });
-
-        // Botão salvar
-        modal.querySelector('.modal-save').addEventListener('click', function() {
-            const title = document.getElementById('modal-title').value.trim();
-            const description = document.getElementById('modal-description').value.trim();
-            const deadline = document.getElementById('modal-deadline').value;
-            const contributors = document.getElementById('modal-contributors').value.trim();
-            
-            if (!title) {
-                alert('Por favor, adicione um título!');
-                return;
-            }
-            
-            // Verificação de segurança: Container deve existir
-            if (!currentCardListContainer) {
-                 console.error("Erro: Container de lista de cards não definido ao salvar.");
-                 return;
-            }
-
-            const selectedType = modal.querySelector('.type-button.active');
-            const type = selectedType ? selectedType.dataset.type : 'start';
-            
-            const cardClass = COLUMN_CONFIG[`card-${type}`];
-            
-            createCard(title, description, deadline, contributors, cardClass);
-            closeModal();
-        });
-        
-        modalEventsInitialized = true; // Marca como inicializado
+    function formatDate(dateString) {
+        if (!dateString) return 'Sem prazo';
+        const date = new Date(dateString + 'T00:00:00');
+        return date.toLocaleDateString('pt-BR');
     }
 
-    function createCard(title, description, deadline, contributors, cardClass) {
+    function createCard(title, description, deadline, contributors, priority, cardId = null) {
+        const id = cardId || `card-${cardIdCounter++}`;
         const newCardItem = document.createElement('div');
-        // CORREÇÃO ESSENCIAL: Adiciona a classe base 'card-item' (para estilização e seleção) e a classe de tipo
-        newCardItem.classList.add('card-item', cardClass); 
+        const cardClass = COLUMN_CONFIG[currentColumn];
+        newCardItem.classList.add(cardClass);
+        newCardItem.setAttribute('data-card-id', id);
         
-        const cardContent = document.createElement('p');
-        cardContent.classList.add('text-card');
+        newCardItem.dataset.title = title;
+        newCardItem.dataset.description = description || '';
+        newCardItem.dataset.deadline = deadline || '';
+        newCardItem.dataset.contributors = contributors || '';
+        newCardItem.dataset.priority = priority;
         
-        let cardText = `<strong>${title}</strong>`;
-        if (description) cardText += `<br/>${description}`;
-        if (deadline) cardText += `<br/>Deadline: ${formatDate(deadline)}`;
-        if (contributors) cardText += `<br/>Por: ${contributors}`;
+        const cardHeader = document.createElement('div');
+        cardHeader.classList.add('card-header');
         
-        cardContent.innerHTML = cardText;
+        const titleEl = document.createElement('div');
+        titleEl.classList.add('card-title');
+        titleEl.textContent = title;
+        
+        const menuButton = document.createElement('button');
+        menuButton.classList.add('card-menu-button');
+        menuButton.innerHTML = '⋮';
+        menuButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleCardMenu(newCardItem);
+        });
+        
+        cardHeader.appendChild(titleEl);
+        cardHeader.appendChild(menuButton);
+        
+        const cardMenu = document.createElement('div');
+        cardMenu.classList.add('card-menu');
+        
+        const viewButton = document.createElement('button');
+        viewButton.classList.add('card-menu-item');
+        viewButton.innerHTML = '👁️ Ver detalhes';
+        viewButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            viewCardDetails(newCardItem);
+        });
+        
+        const editButton = document.createElement('button');
+        editButton.classList.add('card-menu-item');
+        editButton.innerHTML = '✏️ Editar';
+        editButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            editCard(newCardItem);
+        });
+        
+        const deleteButton = document.createElement('button');
+        deleteButton.classList.add('card-menu-item', 'delete');
+        deleteButton.innerHTML = '🗑️ Excluir';
+        deleteButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            deleteCard(newCardItem);
+        });
+        
+        cardMenu.appendChild(viewButton);
+        cardMenu.appendChild(editButton);
+        cardMenu.appendChild(deleteButton);
+        
+        const cardContent = document.createElement('div');
+        cardContent.classList.add('card-content');
+        
+        const priorityEl = document.createElement('div');
+        priorityEl.classList.add('card-priority');
+        priorityEl.innerHTML = `
+            <span class="priority-dot ${priority}"></span>
+            <span>${PRIORITY_LABELS[priority]}</span>
+        `;
+        cardContent.appendChild(priorityEl);
+        
+        const deadlineEl = document.createElement('div');
+        deadlineEl.classList.add('card-deadline');
+        deadlineEl.textContent = `📅 ${formatDate(deadline)}`;
+        cardContent.appendChild(deadlineEl);
+        
+        newCardItem.appendChild(cardHeader);
+        newCardItem.appendChild(cardMenu);
         newCardItem.appendChild(cardContent);
         
         makeCardDraggable(newCardItem);
         currentCardListContainer.appendChild(newCardItem);
     }
 
-    function formatDate(dateString) {
-        if (!dateString) return 'TBA';
-        // CORREÇÃO DE DATA: Trata a data para evitar problemas de fuso horário
-        const date = new Date(dateString.replace(/-/g, '\/')); 
-        return date.toLocaleDateString('pt-BR');
+    function toggleCardMenu(card) {
+        const menu = card.querySelector('.card-menu');
+        const allMenus = document.querySelectorAll('.card-menu, .workspace-menu');
+        
+        allMenus.forEach(m => {
+            if (m !== menu) m.classList.remove('active');
+        });
+        
+        menu.classList.toggle('active');
+    }
+
+    function viewCardDetails(card) {
+        const menu = card.querySelector('.card-menu');
+        menu.classList.remove('active');
+        
+        const title = card.dataset.title;
+        const description = card.dataset.description;
+        const deadline = card.dataset.deadline;
+        const contributors = card.dataset.contributors;
+        const priority = card.dataset.priority;
+        
+        let details = `📌 ${title}\n\n`;
+        if (description) details += `Descrição:\n${description}\n\n`;
+        details += `Prioridade: ${PRIORITY_LABELS[priority]}\n`;
+        details += `Prazo: ${formatDate(deadline)}\n`;
+        if (contributors) details += `Colaboradores: ${contributors}`;
+        
+        alert(details);
+    }
+
+    function editCard(card) {
+        const menu = card.querySelector('.card-menu');
+        menu.classList.remove('active');
+        
+        const columnClass = Array.from(card.parentElement.parentElement.classList).find(cls => cls.startsWith('card-'));
+        
+        const cardData = {
+            element: card,
+            title: card.dataset.title,
+            description: card.dataset.description,
+            deadline: card.dataset.deadline,
+            contributors: card.dataset.contributors,
+            priority: card.dataset.priority
+        };
+        
+        openModal(card.parentElement, columnClass, cardData);
+    }
+
+    function deleteCard(card) {
+        const menu = card.querySelector('.card-menu');
+        menu.classList.remove('active');
+        
+        if (confirm('Deseja realmente excluir esta tarefa?')) {
+            card.remove();
+        }
     }
 
     function makeCardDraggable(card) {
         card.setAttribute('draggable', 'true');
         
         card.addEventListener('dragstart', function(e) {
+            const menu = card.querySelector('.card-menu');
+            if (menu) menu.classList.remove('active');
+            
             card.classList.add('dragging');
             e.dataTransfer.effectAllowed = 'move';
-            e.dataTransfer.setData('text/plain', 'dragging-card'); 
         });
         
         card.addEventListener('dragend', function() {
@@ -148,7 +229,6 @@
     }
 
     function setupDropZone(cardListContainer) {
-        // DRAGOVER: Lida com a reordenação em tempo real
         cardListContainer.addEventListener('dragover', function(e) {
             e.preventDefault();
             e.dataTransfer.dropEffect = 'move';
@@ -166,18 +246,16 @@
             }
         });
         
-        // DROP: Lida com a mudança de classe (cor)
         cardListContainer.addEventListener('drop', function(e) {
             e.preventDefault();
             const draggingCard = document.querySelector('.dragging');
             
             if (draggingCard) {
-                let targetColumn = cardListContainer.parentElement;
+                const targetColumn = cardListContainer.parentElement;
                 
                 let columnClass = null;
-                // Encontra a classe da coluna (card-start, card-progress, etc.)
                 for (let cls of targetColumn.classList) {
-                    if (COLUMN_CONFIG.hasOwnProperty(cls)) { 
+                    if (COLUMN_CONFIG.hasOwnProperty(cls)) {
                         columnClass = cls;
                         break;
                     }
@@ -185,16 +263,8 @@
                 
                 if (columnClass) {
                     const newCardClass = COLUMN_CONFIG[columnClass];
-                    
-                    // CORREÇÃO DRAG & DROP: Remove todas as classes de tipo anteriores de forma dinâmica
                     draggingCard.classList.remove(...Object.values(COLUMN_CONFIG));
-                    
-                    // Adiciona a classe correta para a nova coluna
                     draggingCard.classList.add(newCardClass);
-                    
-                    console.log(`Card movido para ${columnClass}, classe aplicada: ${newCardClass}`);
-                } else {
-                    console.error('Não foi possível determinar a coluna de destino');
                 }
             }
         });
@@ -216,79 +286,276 @@
     }
 
     function setupCardAddition(addButton) {
-        const kanbanColumn = addButton.parentNode; 
-        const cardListContainer = kanbanColumn.querySelector('.card-list-content'); 
-
-        if (!cardListContainer) {
-            console.error("Elemento '.card-list-content' não encontrado na coluna.", kanbanColumn);
-            return;
-        }
-
+        const kanbanColumn = addButton.parentNode;
+        const cardListContainer = kanbanColumn.querySelector('.card-list-content');
         const columnClass = Array.from(kanbanColumn.classList).find(cls => cls.startsWith('card-'));
-
-        if (!columnClass || !COLUMN_CONFIG[columnClass]) {
-            console.warn(`A coluna ${columnClass} não é uma coluna Kanban reconhecida.`);
-            return;
-        }
 
         addButton.addEventListener('click', function() {
             openModal(cardListContainer, columnClass);
         });
     }
-    
-    // (O restante do código para setupWorkspaceAddition é mantido igual)
-    function setupWorkspaceAddition(addWorkspaceButton) {
-        const workspaceCardsContainer = addWorkspaceButton.parentNode;
 
-        if (!workspaceCardsContainer || !workspaceCardsContainer.classList.contains('workspace-cards')) {
-            console.error("Container '.workspace-cards' não encontrado.");
-            return;
-        }
-
-        let workspaceCounter = workspaceCardsContainer.querySelectorAll('.workspace-card-item').length + 1;
-
-        addWorkspaceButton.addEventListener('click', function() {
-            const newWorkspaceItem = document.createElement('div');
-            newWorkspaceItem.classList.add('workspace-card-item');
-
-            const workspaceText = document.createElement('p');
-            workspaceText.classList.add('text-card');
-            workspaceText.textContent = `Workspace ${workspaceCounter}`;
-
-            newWorkspaceItem.appendChild(workspaceText);
-            workspaceCounter++;
-
-            workspaceCardsContainer.insertBefore(newWorkspaceItem, addWorkspaceButton);
+    function setupModalEvents() {
+        const modal = document.getElementById('modalOverlay');
+        const modalClose = document.getElementById('modalClose');
+        const modalCancel = document.getElementById('modalCancel');
+        const modalSave = document.getElementById('modalSave');
+        
+        modalClose.addEventListener('click', closeModal);
+        modalCancel.addEventListener('click', closeModal);
+        
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeModal();
+            }
+        });
+        
+        const typeButtons = modal.querySelectorAll('.type-button');
+        typeButtons.forEach(button => {
+            button.addEventListener('click', function() {
+                typeButtons.forEach(btn => btn.classList.remove('active'));
+                this.classList.add('active');
+            });
+        });
+        
+        modalSave.addEventListener('click', function() {
+            const title = document.getElementById('modal-title-input').value.trim();
+            const description = document.getElementById('modal-description').value.trim();
+            const deadline = document.getElementById('modal-deadline').value;
+            const contributors = document.getElementById('modal-contributors').value.trim();
+            const priority = modal.querySelector('.type-button.active').dataset.type;
+            
+            if (!title) {
+                alert('Por favor, adicione um título!');
+                return;
+            }
+            
+            if (editingCard && editingCard.element) {
+                const card = editingCard.element;
+                card.dataset.title = title;
+                card.dataset.description = description;
+                card.dataset.deadline = deadline;
+                card.dataset.contributors = contributors;
+                card.dataset.priority = priority;
+                
+                card.querySelector('.card-title').textContent = title;
+                card.querySelector('.card-priority').innerHTML = `
+                    <span class="priority-dot ${priority}"></span>
+                    <span>${PRIORITY_LABELS[priority]}</span>
+                `;
+                card.querySelector('.card-deadline').textContent = `📅 ${formatDate(deadline)}`;
+            } else {
+                createCard(title, description, deadline, contributors, priority);
+            }
+            
+            closeModal();
         });
     }
 
-    function initializeKanban() {
-        // CORREÇÃO ESSENCIAL: Configura os eventos do modal UMA ÚNICA VEZ
-        if (!modalEventsInitialized) {
-            setupModalEvents();
-        }
+    // ========== FUNÇÕES DE WORKSPACE ==========
+
+    function openWorkspaceModal(workspaceData = null) {
+        editingWorkspace = workspaceData;
+
+        const modal = document.getElementById('modalWorkspaceOverlay');
+        const modalTitle = document.getElementById('modalWorkspaceTitleText');
         
-        // Inicializa os botões de adicionar cards
+        if (workspaceData) {
+            modalTitle.textContent = 'Editar Workspace';
+            document.getElementById('modal-workspace-name').value = workspaceData.name;
+            document.getElementById('modal-workspace-description').value = workspaceData.description || '';
+        } else {
+            modalTitle.textContent = 'Novo Workspace';
+            document.getElementById('modal-workspace-name').value = '';
+            document.getElementById('modal-workspace-description').value = '';
+        }
+
+        modal.classList.add('active');
+    }
+
+    function closeWorkspaceModal() {
+        const modal = document.getElementById('modalWorkspaceOverlay');
+        modal.classList.remove('active');
+        editingWorkspace = null;
+    }
+
+    function createWorkspace(name, description, workspaceId = null) {
+        const id = workspaceId || `workspace-${workspaceIdCounter++}`;
+        const workspaceCardsContainer = document.querySelector('.workspace-cards');
+        const addButton = document.querySelector('.add-workspace-button');
+        
+        const newWorkspaceItem = document.createElement('div');
+        newWorkspaceItem.classList.add('workspace-card-item');
+        newWorkspaceItem.setAttribute('data-workspace-id', id);
+        
+        newWorkspaceItem.dataset.name = name;
+        newWorkspaceItem.dataset.description = description || '';
+
+        const workspaceName = document.createElement('p');
+        workspaceName.classList.add('text-card', 'workspace-name');
+        workspaceName.textContent = name;
+
+        const menuButton = document.createElement('button');
+        menuButton.classList.add('workspace-menu-button');
+        menuButton.innerHTML = '⋮';
+        menuButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            toggleWorkspaceMenu(newWorkspaceItem);
+        });
+
+        const workspaceMenu = document.createElement('div');
+        workspaceMenu.classList.add('workspace-menu');
+        
+        const viewButton = document.createElement('button');
+        viewButton.classList.add('workspace-menu-item');
+        viewButton.innerHTML = '👁️ Ver detalhes';
+        viewButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            viewWorkspaceDetails(newWorkspaceItem);
+        });
+        
+        const editButton = document.createElement('button');
+        editButton.classList.add('workspace-menu-item');
+        editButton.innerHTML = '✏️ Editar';
+        editButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            editWorkspace(newWorkspaceItem);
+        });
+        
+        const deleteButton = document.createElement('button');
+        deleteButton.classList.add('workspace-menu-item', 'delete');
+        deleteButton.innerHTML = '🗑️ Excluir';
+        deleteButton.addEventListener('click', (e) => {
+            e.stopPropagation();
+            deleteWorkspace(newWorkspaceItem);
+        });
+        
+        workspaceMenu.appendChild(viewButton);
+        workspaceMenu.appendChild(editButton);
+        workspaceMenu.appendChild(deleteButton);
+
+        newWorkspaceItem.appendChild(workspaceName);
+        newWorkspaceItem.appendChild(menuButton);
+        newWorkspaceItem.appendChild(workspaceMenu);
+
+        workspaceCardsContainer.insertBefore(newWorkspaceItem, addButton);
+    }
+
+    function toggleWorkspaceMenu(workspace) {
+        const menu = workspace.querySelector('.workspace-menu');
+        const allMenus = document.querySelectorAll('.card-menu, .workspace-menu');
+        
+        allMenus.forEach(m => {
+            if (m !== menu) m.classList.remove('active');
+        });
+        
+        menu.classList.toggle('active');
+    }
+
+    function viewWorkspaceDetails(workspace) {
+        const menu = workspace.querySelector('.workspace-menu');
+        menu.classList.remove('active');
+        
+        const name = workspace.dataset.name;
+        const description = workspace.dataset.description;
+        
+        let details = `🗂️ ${name}\n\n`;
+        if (description) details += `Descrição:\n${description}`;
+        else details += 'Sem descrição';
+        
+        alert(details);
+    }
+
+    function editWorkspace(workspace) {
+        const menu = workspace.querySelector('.workspace-menu');
+        menu.classList.remove('active');
+        
+        const workspaceData = {
+            element: workspace,
+            name: workspace.dataset.name,
+            description: workspace.dataset.description
+        };
+        
+        openWorkspaceModal(workspaceData);
+    }
+
+    function deleteWorkspace(workspace) {
+        const menu = workspace.querySelector('.workspace-menu');
+        menu.classList.remove('active');
+        
+        if (confirm('Deseja realmente excluir este workspace?')) {
+            workspace.remove();
+        }
+    }
+
+    function setupWorkspaceAddition(addWorkspaceButton) {
+        addWorkspaceButton.addEventListener('click', function() {
+            openWorkspaceModal();
+        });
+    }
+
+    function setupWorkspaceModalEvents() {
+        const modal = document.getElementById('modalWorkspaceOverlay');
+        const modalClose = document.getElementById('modalWorkspaceClose');
+        const modalCancel = document.getElementById('modalWorkspaceCancel');
+        const modalSave = document.getElementById('modalWorkspaceSave');
+        
+        modalClose.addEventListener('click', closeWorkspaceModal);
+        modalCancel.addEventListener('click', closeWorkspaceModal);
+        
+        modal.addEventListener('click', function(e) {
+            if (e.target === modal) {
+                closeWorkspaceModal();
+            }
+        });
+        
+        modalSave.addEventListener('click', function() {
+            const name = document.getElementById('modal-workspace-name').value.trim();
+            const description = document.getElementById('modal-workspace-description').value.trim();
+            
+            if (!name) {
+                alert('Por favor, adicione um nome para o workspace!');
+                return;
+            }
+            
+            if (editingWorkspace && editingWorkspace.element) {
+                const workspace = editingWorkspace.element;
+                workspace.dataset.name = name;
+                workspace.dataset.description = description;
+                
+                workspace.querySelector('.workspace-name').textContent = name;
+            } else {
+                createWorkspace(name, description);
+            }
+            
+            closeWorkspaceModal();
+        });
+    }
+
+    // Fechar menus ao clicar fora
+    document.addEventListener('click', function(e) {
+        if (!e.target.closest('.card-menu') && 
+            !e.target.closest('.card-menu-button') &&
+            !e.target.closest('.workspace-menu') && 
+            !e.target.closest('.workspace-menu-button')) {
+            const allMenus = document.querySelectorAll('.card-menu, .workspace-menu');
+            allMenus.forEach(menu => menu.classList.remove('active'));
+        }
+    });
+
+    // Inicializar
+    function initializeKanban() {
+        setupModalEvents();
+        setupWorkspaceModalEvents();
+        
         const addButtons = document.querySelectorAll('.add-card-button');
         addButtons.forEach(setupCardAddition);
 
-        // Inicializa o botão de adicionar workspace
         const addWorkspaceButton = document.querySelector('.add-workspace-button');
         if (addWorkspaceButton) {
             setupWorkspaceAddition(addWorkspaceButton);
         }
 
-        // Torna todos os cards existentes arrastáveis
-        const existingCards = document.querySelectorAll('[class*="card-item-"]');
-        existingCards.forEach(card => {
-            // Garante que todos os cards (existentes no HTML) tenham a classe base 'card-item'
-            if (!card.classList.contains('card-item')) {
-                 card.classList.add('card-item'); 
-            }
-            makeCardDraggable(card);
-        });
-
-        // Configura as zonas de drop em todos os containers de cards
         const cardListContainers = document.querySelectorAll('.card-list-content');
         cardListContainers.forEach(setupDropZone);
     }

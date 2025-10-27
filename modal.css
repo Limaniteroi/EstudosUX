@@ -1,9 +1,9 @@
-@import url('https://fonts.googleapis.com/css2?family=Inter:ital,opsz,wght@0,14..32,100..900;1,14..32,100..900&family=Lexend+Deca:wght@100..900&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@400;700&display=swap');
 
 :root{
     --background-color: white;
     --font-family: 'Lexend Deca';
-    --button-save-color:  #4285F4;
+    --button-save-color: #4285F4;
     --button-save-hover-color: #224b8d;
     --text-color-card: #909090;
 }
@@ -19,6 +19,16 @@
     justify-content: center;
     align-items: center;
     z-index: 1000;
+    animation: fadeIn 0.3s ease;
+}
+
+.modal-overlay.active {
+    display: flex;
+}
+
+@keyframes fadeIn {
+    from { opacity: 0; }
+    to { opacity: 1; }
 }
 
 .modal-content {
@@ -29,6 +39,18 @@
     max-width: 500px;
     position: relative;
     box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+    animation: slideUp 0.3s ease;
+}
+
+@keyframes slideUp {
+    from {
+        transform: translateY(30px);
+        opacity: 0;
+    }
+    to {
+        transform: translateY(0);
+        opacity: 1;
+    }
 }
 
 .modal-close {
@@ -37,17 +59,25 @@
     right: 20px;
     background: none;
     border: none;
-    font-size: 32px;
+    font-size: 28px;
     cursor: pointer;
     color: #666;
     line-height: 1;
     padding: 0;
     width: 30px;
     height: 30px;
+    transition: color 0.2s;
 }
 
 .modal-close:hover {
     color: #000;
+}
+
+.modal-title {
+    font-size: 24px;
+    font-weight: 700;
+    color: #333;
+    margin-bottom: 24px;
 }
 
 .modal-field {
@@ -78,7 +108,7 @@
 .modal-input:focus,
 .modal-textarea:focus {
     outline: none;
-    border-color: var(--add-button-color);
+    border-color: var(--button-save-color);
 }
 
 .modal-textarea {
@@ -103,22 +133,23 @@
     border-radius: 50%;
     cursor: pointer;
     font-size: 20px;
-    transition: transform 0.2s, box-shadow 0.2s;
+    transition: all 0.2s;
     display: flex;
     align-items: center;
     justify-content: center;
+    color: transparent;
 }
 
 .type-button[data-type="low"] {
-    background-color: green;
+    background-color: #4caf50;
 }
 
 .type-button[data-type="medium"] {
-    background-color: yellow;
+    background-color: #ffc107;
 }
 
 .type-button[data-type="high"] {
-    background-color: red;
+    background-color: #f44336;
 }
 
 .type-button:hover {
@@ -126,48 +157,44 @@
 }
 
 .type-button.active {
-    transform: scale(1.2);
-    box-shadow: 0 0 0 3px rgba(0, 0, 0, 0.2);
+    transform: scale(1.15);
+    box-shadow: 0 0 0 5px rgba(0, 0, 0, 0.1);
+    color: white;
+}
+
+.modal-actions {
+    display: flex;
+    justify-content: flex-end;
+    gap: 12px;
+    margin-top: 24px;
+}
+
+.modal-save,
+.modal-cancel {
+    border: none;
+    border-radius: 6px;
+    padding: 12px 24px;
+    font-family: var(--font-family);
+    font-size: 16px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s;
 }
 
 .modal-save {
     background-color: var(--button-save-color);
     color: white;
-    border: none;
-    border-radius: 6px;
-    padding: 12px 30px;
-    font-family: var(--font-family);
-    font-size: 16px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: background-color 0.2s;
-    float: right;
-    margin-top: 10px;
 }
 
 .modal-save:hover {
     background-color: var(--button-save-hover-color);
 }
-/* Adicione esta seção ao modal.css */
-/* Melhora a indicação visual do botão de tipo ativo */
-.type-button.active {
-    /* Efeito de escala para destacar */
-    transform: scale(1.15); 
-    /* Sombra para dar profundidade e destaque */
-    box-shadow: 0 0 0 5px rgba(0, 0, 0, 0.1); 
-    /* O texto (o ponto ●) fica visível */
-    color: white !important; 
+
+.modal-cancel {
+    background-color: #f5f5f5;
+    color: #333;
 }
 
-/* Garante que o texto '●' esteja visível no botão ativo */
-.type-button[data-type="low"].active {
-    color: white;
-}
-
-.type-button[data-type="medium"].active {
-    color: white;
-}
-
-.type-button[data-type="high"].active {
-    color: white;
+.modal-cancel:hover {
+    background-color: #e0e0e0;
 }

@@ -1,10 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@400;700&display=swap');
+@import url('https://fonts.googleapis.com/css2?family=Lexend+Deca:wght@400;600;700&display=swap');
 
 :root{
-    --background-color: #1845C2;
+    --background-f-color: #1845C2;
     --workspace-color: #2A3A65;
     --workspace-item-color: #BB44F7;
-    --cards-color: #13338a;
+    --cards-color: #225DFF;
     --to-start-card-color: #5983f8;
     --in-progress-card-color: #4BC563;
     --done-card-color: #EE289F;
@@ -12,6 +12,16 @@
     --add-button-color: #862BB4;
     --add-button-hover-color: #47195f;
     --text-color-card: #909090;
+}
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: var(--font-family);
 }
 
 .container {
@@ -22,11 +32,11 @@
     height: auto;
     width: 100%;
     min-width: 1000px;
-    background-color: var(--background-color);
     gap: 20px;
     padding: 20px;
     overflow-x: auto;
-    box-sizing: border-box;
+    /* background-color: var(--background-f-color)!important; */
+    background-image: url("peixes_lago.jpg");
 }
 
 .card {
@@ -41,6 +51,8 @@
     margin: 10px;
     flex-shrink: 0;
     flex-grow: 0;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.3);
+
 }
 
 .card > div {
@@ -54,7 +66,6 @@
     box-sizing: border-box;
 }
 
-/* Contêineres de coluna (card-start, card-progress, card-done) */
 .card-start,
 .card-progress,
 .card-done {
@@ -74,65 +85,36 @@
     box-sizing: border-box;
 }
 
-.card-item-start {
-    background-color: var(--to-start-card-color);
-    box-shadow: 0 3px 6px rgba(30, 31, 34, 0.4);
-    border-radius: 5px;
-    padding: 10px;
+.card-item-start,
+.card-item-progress,
+.card-item-done {
+    border-radius: 8px;
+    padding: 12px;
+    padding-top: 8px;
     margin: 12px 0;
     width: calc(100% - 8px);
-    min-height: 56px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
+    min-height: 70px;
     cursor: grab;
-    word-wrap: break-word;
+    box-shadow: 0 3px 6px rgba(30, 31, 34, 0.4);
     transition: transform 0.2s, box-shadow 0.2s;
     box-sizing: border-box;
+    position: relative;
 }
 
-.card-item-start:active {
-    cursor: grabbing;
+.card-item-start {
+    background-color: var(--to-start-card-color);
 }
 
 .card-item-progress {
     background-color: var(--in-progress-card-color);
-    border-radius: 5px;
-    padding: 10px;
-    margin: 12px 0;
-    width: calc(100% - 8px);
-    min-height: 56px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: grab;
-    word-wrap: break-word;
-    box-shadow: 0 3px 6px rgba(30, 31, 34, 0.4);
-    transition: transform 0.2s, box-shadow 0.2s;
-    box-sizing: border-box;
-}
-
-.card-item-progress:active {
-    cursor: grabbing;
 }
 
 .card-item-done {
     background-color: var(--done-card-color);
-    border-radius: 5px;
-    padding: 10px;
-    margin: 12px 0;
-    width: calc(100% - 8px);
-    min-height: 56px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: grab;
-    word-wrap: break-word;
-    box-shadow: 0 3px 6px rgba(30, 31, 34, 0.4);
-    transition: transform 0.2s, box-shadow 0.2s;
-    box-sizing: border-box;
 }
 
+.card-item-start:active,
+.card-item-progress:active,
 .card-item-done:active {
     cursor: grabbing;
 }
@@ -140,6 +122,130 @@
 .dragging {
     opacity: 0.5;
     transform: rotate(3deg);
+}
+
+.card-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    margin-bottom: 8px;
+    width: 100%;
+}
+
+.card-content {
+    width: 100%;
+    flex-grow: 1;
+}
+
+.card-menu-button {
+    background: none;
+    border: none;
+    color: rgba(255, 255, 255, 0.8);
+    font-size: 18px;
+    cursor: pointer;
+    padding: 2px 6px;
+    border-radius: 4px;
+    transition: all 0.2s;
+    line-height: 1;
+    flex-shrink: 0;
+}
+
+.card-menu-button:hover {
+    background-color: rgba(255, 255, 255, 0.2);
+    color: white;
+}
+
+.card-menu {
+    position: absolute;
+    top: 35px;
+    right: 8px;
+    background-color: white;
+    border-radius: 6px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
+    z-index: 100;
+    display: none;
+    min-width: 140px;
+    overflow: hidden;
+}
+
+.card-menu.active {
+    display: block;
+}
+
+.card-menu-item {
+    padding: 10px 16px;
+    cursor: pointer;
+    font-size: 13px;
+    color: #333;
+    transition: background-color 0.2s;
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    border: none;
+    background: none;
+    width: 100%;
+    text-align: left;
+    font-family: var(--font-family);
+}
+
+.card-menu-item:hover {
+    background-color: #f5f5f5;
+}
+
+.card-menu-item.delete:hover {
+    background-color: #ffebee;
+    color: #d32f2f;
+}
+
+.card-title {
+    font-weight: 700;
+    font-size: 14px;
+    color: #FFFFFF;
+    margin-bottom: 8px;
+    word-wrap: break-word;
+    flex-grow: 1;
+    padding-right: 8px;
+}
+
+.card-priority {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.9);
+    margin-bottom: 6px;
+}
+
+.priority-dot {
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    display: inline-block;
+}
+
+.priority-dot.low { background-color: #4caf50; }
+.priority-dot.medium { background-color: #ffc107; }
+.priority-dot.high { background-color: #f44336; }
+
+.card-deadline {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.8);
+    margin-top: 4px;
+}
+
+.card-description {
+    font-size: 12px;
+    color: rgba(255, 255, 255, 0.85);
+    margin-top: 6px;
+    line-height: 1.4;
+    word-wrap: break-word;
+}
+
+.card-contributors {
+    font-size: 11px;
+    color: rgba(255, 255, 255, 0.75);
+    margin-top: 6px;
+    font-style: italic;
 }
 
 .title {
@@ -153,6 +259,7 @@
     color: #FFFFFF;
     text-align: center;
     flex-shrink: 0;
+    margin-bottom: 12px;
 }
 
 .text-card {
@@ -163,6 +270,7 @@
     line-height: 15px;
     color: #FFFFFF;
     text-align: center;
+    margin: 0;
 }
 
 .add-card-button {
@@ -170,8 +278,8 @@
     border-radius: 5px;
     padding: 5px;
     margin: 5px 0;
-    width: 117px;
-    height: 30px;
+    width: 138px;
+    height: 38px;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -179,7 +287,6 @@
     transition: background-color 0.2s;
     margin-top: auto;
     box-shadow: 0 3px 6px rgba(30, 31, 34, 0.4);
-
 }
 
 .add-card-button:hover {
@@ -190,7 +297,6 @@
     margin-top: 20px;
     margin-bottom: 10px;
 }
-
 
 .workspace-cards {
     display: flex;

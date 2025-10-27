@@ -6,15 +6,15 @@
     <title>To Do List</title>
     <link rel="stylesheet" href="home.css">
     <link rel="stylesheet" href="workspace.css">
+    <link rel="stylesheet" href="modal.css">
     <script src="script.js" defer></script>
 </head>
 <body>
     <div class="container">
-        
         <div class="workspace-container">
             <p class="title">Aquarium's Workspace</p>
             <img src="aquário.png" alt="Aquário">
-            <div class = "workspace-cards">
+            <div class="workspace-cards">
                 <div class="add-workspace-button">
                     <h3 class="text-card">+ Add Workspace</h3>
                 </div>
@@ -22,14 +22,9 @@
         </div>
 
         <div class="card">
-            <div class ="card-start">
+            <div class="card-start">
                 <h2 class="title">TO START</h2>
-                
-                <div class="card-list-content">
-                    <div class="card-item-start">
-                        <p class = "text-card">Task 1: Definir Cores<br/>Deadline: XX</p>
-                    </div>
-                </div>
+                <div class="card-list-content"></div>
                 <div class="add-card-button">
                     <h3 class="text-card">+ Add Card</h3>
                 </div>
@@ -37,14 +32,9 @@
         </div>
 
         <div class="card">
-            <div class ="card-progress">
+            <div class="card-progress">
                 <h2 class="title">IN PROGRESS</h2>
-                
-                <div class="card-list-content">
-                    <div class="card-item-progress">
-                        <p class = "text-card">Task 1: Codar JS<br/>Deadline: XX</p>
-                    </div>
-                </div>
+                <div class="card-list-content"></div>
                 <div class="add-card-button">
                     <h3 class="text-card">+ Add Card</h3>
                 </div>
@@ -52,20 +42,78 @@
         </div>
         
         <div class="card">
-            <div class ="card-done">
+            <div class="card-done">
                 <h2 class="title">DONE</h2>
-                
-                <div class="card-list-content">
-                    <div class="card-item-done">
-                        <p class = "text-card">Task 1: Estrutura HTML<br/>Deadline: XX</p>
-                    </div>
-                </div>
+                <div class="card-list-content"></div>
                 <div class="add-card-button">
                     <h3 class="text-card">+ Add Card</h3>
                 </div>
             </div>
         </div>
     </div>
-    
+
+    <!-- Modal -->
+    <div class="modal-overlay" id="modalOverlay">
+        <div class="modal-content">
+            <button class="modal-close" id="modalClose">X</button>
+            <h2 class="modal-title" id="modalTitleText">Nova Tarefa</h2>
+            
+            <div class="modal-field">
+                <label for="modal-title-input">Título:</label>
+                <input type="text" id="modal-title-input" class="modal-input" placeholder="Digite o título da tarefa">
+            </div>
+            
+            <div class="modal-field">
+                <label for="modal-description">Descrição:</label>
+                <textarea id="modal-description" class="modal-textarea" placeholder="Descreva a tarefa"></textarea>
+            </div>
+            
+            <div class="modal-field">
+                <label for="modal-deadline">Prazo:</label>
+                <input type="date" id="modal-deadline" class="modal-input">
+            </div>
+            
+            <div class="modal-field">
+                <label for="modal-contributors">Colaboradores:</label>
+                <input type="text" id="modal-contributors" class="modal-input" placeholder="Nome dos colaboradores">
+            </div>
+            
+            <div class="modal-field">
+                <label>Prioridade:</label>
+                <div class="modal-type-selector">
+                    <button class="type-button" data-type="low" title="Baixa">●</button>
+                    <button class="type-button active" data-type="medium" title="Média">●</button>
+                    <button class="type-button" data-type="high" title="Alta">●</button>
+                </div>
+            </div>
+            
+            <div class="modal-actions">
+                <button class="modal-cancel" id="modalCancel">Cancelar</button>
+                <button class="modal-save" id="modalSave">Salvar</button>
+            </div>
+        </div>
+    </div>
+<!-- Modal Workspace -->
+    <div class="modal-overlay" id="modalWorkspaceOverlay">
+        <div class="modal-content">
+            <button class="modal-close" id="modalWorkspaceClose">X</button>
+            <h2 class="modal-title" id="modalWorkspaceTitleText">Novo Workspace</h2>
+            
+            <div class="modal-field">
+                <label for="modal-workspace-name">Nome do Workspace:</label>
+                <input type="text" id="modal-workspace-name" class="modal-input" placeholder="Digite o nome do workspace">
+            </div>
+            
+            <div class="modal-field">
+                <label for="modal-workspace-description">Descrição:</label>
+                <textarea id="modal-workspace-description" class="modal-textarea" placeholder="Descreva o workspace"></textarea>
+            </div>
+            
+            <div class="modal-actions">
+                <button class="modal-cancel" id="modalWorkspaceCancel">Cancelar</button>
+                <button class="modal-save" id="modalWorkspaceSave">Salvar</button>
+            </div>
+        </div>
+    </div>
 </body>
 </html>
