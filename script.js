@@ -20,6 +20,105 @@
     let cardIdCounter = 0;
     let workspaceIdCounter = 0;
 
+    // ========== FUNÇÕES DE ARMAZENAMENTO LOCAL ==========
+
+    function saveToLocalStorage() {
+        const data = {
+            cards: [],
+            workspaces: [],
+            cardIdCounter: cardIdCounter,
+            workspaceIdCounter: workspaceIdCounter
+        };
+
+        // Salvar todos os cards
+        const allCards = document.querySelectorAll('[data-card-id]');
+        allCards.forEach(card => {
+            const columnClass = Array.from(card.classList).find(cls => 
+                cls === 'card-item-start' || cls === 'card-item-progress' || cls === 'card-item-done'
+            );
+            
+            data.cards.push({
+                id: card.getAttribute('data-card-id'),
+                title: card.dataset.title,
+                description: card.dataset.description,
+                deadline: card.dataset.deadline,
+                contributors: card.dataset.contributors,
+                priority: card.dataset.priority,
+                column: columnClass
+            });
+        });
+
+        // Salvar todos os workspaces
+        const allWorkspaces = document.querySelectorAll('[data-workspace-id]');
+        allWorkspaces.forEach(workspace => {
+            data.workspaces.push({
+                id: workspace.getAttribute('data-workspace-id'),
+                name: workspace.dataset.name,
+                description: workspace.dataset.description
+            });
+        });
+
+        localStorage.setItem('kanbanData', JSON.stringify(data));
+    }
+
+    function loadFromLocalStorage() {
+        const savedData = localStorage.getItem('kanbanData');
+        if (!savedData) return;
+
+        try {
+            const data = JSON.parse(savedData);
+            
+            // Restaurar contadores
+            cardIdCounter = data.cardIdCounter || 0;
+            workspaceIdCounter = data.workspaceIdCounter || 0;
+
+            // Restaurar cards
+            if (data.cards && data.cards.length > 0) {
+                data.cards.forEach(cardData => {
+                    // Encontrar a coluna correta
+                    let columnElement = null;
+                    if (cardData.column === 'card-item-start') {
+                        columnElement = document.querySelector('.card-start');
+                    } else if (cardData.column === 'card-item-progress') {
+                        columnElement = document.querySelector('.card-progress');
+                    } else if (cardData.column === 'card-item-done') {
+                        columnElement = document.querySelector('.card-done');
+                    }
+
+                    if (columnElement) {
+                        const cardListContainer = columnElement.querySelector('.card-list-content');
+                        const columnClass = Array.from(columnElement.classList).find(cls => cls.startsWith('card-'));
+                        
+                        currentCardListContainer = cardListContainer;
+                        currentColumn = columnClass;
+                        
+                        createCard(
+                            cardData.title,
+                            cardData.description,
+                            cardData.deadline,
+                            cardData.contributors,
+                            cardData.priority,
+                            cardData.id
+                        );
+                    }
+                });
+            }
+
+            // Restaurar workspaces
+            if (data.workspaces && data.workspaces.length > 0) {
+                data.workspaces.forEach(workspaceData => {
+                    createWorkspace(
+                        workspaceData.name,
+                        workspaceData.description,
+                        workspaceData.id
+                    );
+                });
+            }
+        } catch (error) {
+            console.error('Erro ao carregar dados do localStorage:', error);
+        }
+    }
+
     // ========== FUNÇÕES DE CARDS ==========
 
     function openModal(cardListContainer, columnClass, cardData = null) {
@@ -153,6 +252,9 @@
         
         makeCardDraggable(newCardItem);
         currentCardListContainer.appendChild(newCardItem);
+        
+        // Salvar no localStorage
+        saveToLocalStorage();
     }
 
     function toggleCardMenu(card) {
@@ -209,6 +311,8 @@
         
         if (confirm('Deseja realmente excluir esta tarefa?')) {
             card.remove();
+            // Salvar no localStorage
+            saveToLocalStorage();
         }
     }
 
@@ -225,6 +329,8 @@
         
         card.addEventListener('dragend', function() {
             card.classList.remove('dragging');
+            // Salvar no localStorage após mover o card
+            saveToLocalStorage();
         });
     }
 
@@ -344,6 +450,9 @@
                     <span>${PRIORITY_LABELS[priority]}</span>
                 `;
                 card.querySelector('.card-deadline').textContent = `📅 ${formatDate(deadline)}`;
+                
+                // Salvar no localStorage
+                saveToLocalStorage();
             } else {
                 createCard(title, description, deadline, contributors, priority);
             }
@@ -439,6 +548,9 @@
         newWorkspaceItem.appendChild(workspaceMenu);
 
         workspaceCardsContainer.insertBefore(newWorkspaceItem, addButton);
+        
+        // Salvar no localStorage
+        saveToLocalStorage();
     }
 
     function toggleWorkspaceMenu(workspace) {
@@ -485,6 +597,8 @@
         
         if (confirm('Deseja realmente excluir este workspace?')) {
             workspace.remove();
+            // Salvar no localStorage
+            saveToLocalStorage();
         }
     }
 
@@ -524,6 +638,9 @@
                 workspace.dataset.description = description;
                 
                 workspace.querySelector('.workspace-name').textContent = name;
+                
+                // Salvar no localStorage
+                saveToLocalStorage();
             } else {
                 createWorkspace(name, description);
             }
@@ -545,6 +662,9 @@
 
     // Inicializar
     function initializeKanban() {
+        // Carregar dados salvos
+        loadFromLocalStorage();
+        
         setupModalEvents();
         setupWorkspaceModalEvents();
         
